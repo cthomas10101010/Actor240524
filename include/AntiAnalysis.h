@@ -11,6 +11,9 @@ public:
 
     // Method to check if a debugger is present
     bool checkDebugger();
+
+    // New method to run all anti-analysis techniques
+    bool runAntiAnalysis();  // Add this declaration
 };
 
 #endif  // ANTIANALYSIS_H

