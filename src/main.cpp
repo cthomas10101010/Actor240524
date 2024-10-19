@@ -2,7 +2,6 @@
 #include "ABCsync.h"
 #include "ABCloader.h"
 #include "AntiAnalysis.h"
-#include "Encryption.h"
 
 int main() {
     // Initialize the loader to decrypt and load the payload
