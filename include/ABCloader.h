@@ -3,7 +3,8 @@
 
 class ABCloader {
 public:
-    bool runLoader();  // Decrypt and load the payload
+    // Function to run the loader
+    bool runLoader();
 };
 
-#endif // ABCLOADER_H
+#endif

