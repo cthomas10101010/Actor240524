@@ -3,11 +3,14 @@
 
 class AntiAnalysis {
 public:
-    void runAntiAnalysis();
-private:
-    bool checkPEB();
+    // Method to check screen resolution
     bool checkScreenResolution();
+
+    // Method to check the number of processes
     bool checkProcessCount();
+
+    // Method to check if a debugger is present
+    bool checkDebugger();
 };
 
-#endif
+#endif  // ANTIANALYSIS_H

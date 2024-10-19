@@ -1,22 +1,31 @@
-#include "main.h"
 #include <iostream>
+#include "AntiAnalysis.h"
 
 int main() {
-    // Initialize the loader to decrypt and load the payload
-    ABCloader loader;
-    std::cout << "[*] Running ABCloader..." << std::endl;
-    loader.runLoader();
-
-    // Start anti-analysis techniques (PEB detection, sandbox checks, etc.)
     AntiAnalysis antiAnalysis;
+
     std::cout << "[*] Running anti-analysis techniques..." << std::endl;
-    antiAnalysis.runAntiAnalysis();
 
-    // Initialize the payload (ABCsync) to execute remote shell commands and modify files
-    ABCsync syncPayload;
-    std::cout << "[*] Executing ABCsync payload (open Calculator)..." << std::endl;
-    syncPayload.executePayload();  // Opens Calculator
+    // Check for screen resolution
+    if (!antiAnalysis.checkScreenResolution()) {
+        std::cout << "[!] Exiting due to suspicious screen resolution!" << std::endl;
+        return -1;
+    }
 
-    std::cout << "[*] Completed execution." << std::endl;
+    // Check for the number of processes
+    if (!antiAnalysis.checkProcessCount()) {
+        std::cout << "[!] Exiting due to suspicious process count!" << std::endl;
+        return -1;
+    }
+
+    // Check if a debugger is attached
+    if (antiAnalysis.checkDebugger()) {
+        std::cout << "[!] Exiting due to debugger detection!" << std::endl;
+        return -1;
+    }
+
+    std::cout << "[*] No debugger detected. Proceeding..." << std::endl;
+
+    // Proceed with other operations
     return 0;
 }
