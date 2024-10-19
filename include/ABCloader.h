@@ -3,8 +3,7 @@
 
 class ABCloader {
 public:
-    // Function to run the loader
     bool runLoader();
 };
 
-#endif
+#endif // ABCLOADER_H

