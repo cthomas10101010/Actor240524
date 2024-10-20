@@ -1,11 +1,35 @@
-## Overview
+# Actor240524
+
+This project initially started as an analysis and simulation of the cyber tactics used by APT Group Actor240524, with a primary focus on attack processes, adversarial techniques, and payload delivery methods. However, the project has evolved significantly beyond its original scope. In addition to replicating basic APT techniques, major changes have been made to introduce dynamic payload delivery through native Windows APIs, such as shellcode downloading and execution, along with additional anti-analysis and persistence mechanisms.
+
+The current version incorporates these new functionalities, providing a more realistic simulation of how adversaries might behave in real-world scenarios.
+
+## Compilation Command
 
 ```bash
 g++ -Wall -Iinclude -std=c++17 -o Actor240524.exe src/main.cpp src/ABCloader.cpp src/ABCsync.cpp src/AntiAnalysis.cpp src/Communication.cpp src/Encryption.cpp src/Persistence.cpp src/ProcessFileHandling.cpp src/ShellcodeLoader.cpp -lws2_32 -lwininet -lntdll
-This project analyzes and simulates the cyber tactics used by APT Group Actor240524, with a focus on the attack process, adversarial techniques, and payload delivery methods observed in their campaigns. The project has grown to integrate new functionalities, such as downloading and executing shellcode via native Windows APIs, which adds flexibility and stealth to the payload delivery process.
+This project initially started as an analysis and simulation of the cyber tactics used by APT Group Actor240524, with a primary focus on attack processes, adversarial techniques, and payload delivery methods. However, the project has evolved significantly beyond its original scope. In addition to replicating basic APT techniques, major changes have been made to introduce dynamic payload delivery through native Windows APIs, such as shellcode downloading and execution, along with additional anti-analysis and persistence mechanisms.
+
+The current version incorporates these new functionalities, providing a more realistic simulation of how adversaries might behave in real-world scenarios.
+
+Compilation Command
+bash
+Copy code
+g++ -Wall -Iinclude -std=c++17 -o Actor240524.exe src/main.cpp src/ABCloader.cpp src/ABCsync.cpp src/AntiAnalysis.cpp src/Communication.cpp src/Encryption.cpp src/Persistence.cpp src/ProcessFileHandling.cpp src/ShellcodeLoader.cpp -lws2_32 -lwininet -lntdll
+Major Changes
+Originally, the project focused on replicating DLL-based payload execution. However, the following major improvements have been made to enhance the project's realism and capabilities:
+
+Dynamic Shellcode Execution: A new module (ShellcodeLoader) has been introduced that dynamically downloads shellcode from a C2 server and executes it in memory using native Windows APIs (NtAllocateVirtualMemory and NtProtectVirtualMemory). This approach mimics real-world adversarial techniques that avoid traditional disk-based malware and detection.
+
+Expanded Anti-Analysis Techniques: Additional runtime checks have been added to prevent execution in analysis environments. These include checks for screen resolution, process count, and further debugger detection via PEB analysis and hardware breakpoints.
+
+Persistence via COM Hijacking: The project now simulates a persistence mechanism where system DLLs are replaced with malicious versions using COM hijacking techniques.
+
+These updates transform the project from a simple simulation to a more comprehensive and realistic tool for understanding and analyzing adversarial techniques.
 
 Contents
 Overview
+Major Changes
 Installation
 Usage
 Modules
@@ -63,31 +87,4 @@ Hardware Breakpoint Detection: Identifies active hardware breakpoints that are t
 COM Hijacking: Maintains persistence by replacing system DLLs with malicious ones, allowing the malware to survive system reboots.
 Disclaimer
 This project is for academic and research purposes only. Any misuse of this code for unauthorized activities is strictly prohibited. The developers are not responsible for any malicious use of this project. Use it only in legal environments, such as penetration testing labs, where you have explicit permission.
-
-javascript
-Copy code
-
-### How to Add it to Your Repository:
-
-1. Save this text as `README.md` in the root directory of your project.
-2. Add it to your repository:
-    ```bash
-    git add README.md
-    ```
-3. Commit the changes:
-    ```bash
-    git commit -m "Add README with project documentation"
-    ```
-4. Push it to GitHub:
-    ```bash
-    git push origin main
-    ```
-
-This will display the formatted documentation on the main page of your GitHub repository.
-
-Let me know if you need further assistance!
-
-
-
-
 
