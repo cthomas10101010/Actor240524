@@ -2,7 +2,7 @@
 ## Overview
 compile comand g++ -Wall -Iinclude -std=c++17 -o Actor240524.exe src/main.cpp src/ABCloader.cpp src/ABCsync.cpp src/AntiAnalysis.cpp src/Communication.cpp src/Encryption.cpp src/Persistence.cpp src/ProcessFileHandling.cpp -lws2_32 
 
-This project analyzes and simulates the cyber tactics used by APT Group Actor240524, with a focus on the attack process, adversarial techniques, and payload delivery used in their campaign targeting 
+This project analyzes and simulates the cyber tactics used by APT Group Actor240524, with a focus on the attack process, adversarial techniques, and payload delivery used in their campaign 
 
 ### Contents
 - [Overview](#overview)
