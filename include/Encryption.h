@@ -5,12 +5,10 @@
 
 class Encryption {
 public:
-    // Function to decrypt data and write it to a specified file path
-    bool decryptDataAndWrite(const std::string& filePath);
+    std::string encrypt(const std::string& data, const std::string& key);
+    std::string decrypt(const std::string& data, const std::string& key);
+    bool decryptDataAndWrite(const std::string& filePath); // Declaration added
 
-private:
-    // Function to decrypt the encrypted data (private helper function)
-    std::string decrypt(const std::string& encryptedData);
 };
 
 #endif

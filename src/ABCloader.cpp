@@ -1,5 +1,5 @@
 #include "ABCloader.h"
-#include <Windows.h>  // Make sure you include this for Windows-related types and functions
+#include <Windows.h>
 #include <iostream>
 
 #define WMAX_PATH (MAX_PATH * sizeof(WCHAR))
@@ -38,7 +38,7 @@ void ABCloader::runLoader() {
 bool ABCloader::decryptAndLoadPayload() {
     // Simulate decryption process
     std::wstring fileName = L"Dispose.exe";  // Example file
-    unsigned long hash = hashFileName(fileName);
+    // unsigned long hash = hashFileName(fileName);  // Unused variable
 
     WCHAR system32Path[WMAX_PATH] = { 0 };
     if (!GetSystemDirectoryW(system32Path, WMAX_PATH)) {
@@ -46,7 +46,7 @@ bool ABCloader::decryptAndLoadPayload() {
         return false;
     }
 
-    HANDLE hFile = INVALID_HANDLE_VALUE;  // Simulated file handle loading
+    // HANDLE hFile = INVALID_HANDLE_VALUE;  // Unused variable
     // Logic from yarhLoader to locate and decrypt the file
     // ...
 
@@ -55,13 +55,8 @@ bool ABCloader::decryptAndLoadPayload() {
 }
 
 bool ABCloader::processHollowing(const std::string& targetProcess) {
-    // Here you use the process hollowing technique described in yarhLoader
-    // Example: inject Dispose.exe into calc.exe
-    std::wstring target = std::wstring(targetProcess.begin(), targetProcess.end());
-
-    // Simulate hollowing logic
-    std::cout << "[*] Hollowing target process: " << targetProcess << std::endl;
-    // Implement process hollowing logic here using the techniques in yarhLoader
-
-    return true;  // Return true if successful
+    // Implement the process hollowing logic here
+    std::cout << "[*] Performing process hollowing on: " << targetProcess << std::endl;
+    // Example logic
+    return true;
 }

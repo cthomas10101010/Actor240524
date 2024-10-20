@@ -8,6 +8,6 @@ void Communication::establishConnection(const std::string& ip, int port) {
     std::string data = "Hello C2";
     std::string encryptedData = encryption.encrypt(data, "AES256KEY");
 
-    // Simulate sending UDP packet to C2 server
+    // Simulate sending UDP packet to C server
     std::cout << "Sending encrypted data to C2: " << encryptedData << std::endl;
 }

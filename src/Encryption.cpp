@@ -2,13 +2,7 @@
 #include <iostream>
 #include <fstream>
 #include <algorithm> // For std::reverse
-
-std::string Encryption::decrypt(const std::string& encryptedData) {
-    // Simulate decryption by reversing the string (just an example)
-    std::string decryptedData = encryptedData;
-    std::reverse(decryptedData.begin(), decryptedData.end());
-    return decryptedData;
-}
+#include <stdexcept>
 
 bool Encryption::decryptDataAndWrite(const std::string& filePath) {
     std::string decryptedData = "Decrypted content goes here";  // Example decrypted data
@@ -24,4 +18,20 @@ bool Encryption::decryptDataAndWrite(const std::string& filePath) {
 
     std::cout << "[*] Decrypted data written to " << filePath << std::endl;
     return true;
+}
+
+std::string Encryption::encrypt(const std::string& data, const std::string& key) {
+    // Placeholder encryption logic
+    if (key != "AES256KEY") {
+        throw std::invalid_argument("Invalid encryption key");
+    }
+    return "encrypted_" + data; // Simulated encryption
+}
+
+std::string Encryption::decrypt(const std::string& data, const std::string& key) {
+    // Placeholder decryption logic
+    if (key != "AES256KEY") {
+        throw std::invalid_argument("Invalid decryption key");
+    }
+    return data.substr(10); // Simulated decryption
 }
