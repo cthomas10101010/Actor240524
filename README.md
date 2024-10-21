@@ -9,8 +9,7 @@ The current version aims to simulate real-world adversary behaviors more accurat
 ```bash
 g++ -Wall -Iinclude -std=c++17 -o Actor240524.exe src/main.cpp src/ABCloader.cpp src/ABCsync.cpp src/AntiAnalysis.cpp src/Communication.cpp src/Encryption.cpp src/Persistence.cpp src/ProcessFileHandling.cpp src/ShellcodeLoader.cpp -lws2_32 -lwininet -lntdll
 
-
-🌟 Major Changes 🌟
+## Major Changes 🌟
 Originally, this project focused on DLL-based payload execution. The following major improvements have been made:
 
 Dynamic Shellcode Execution: The ShellcodeLoader module now dynamically downloads shellcode from a C2 server and executes it in memory using native Windows APIs like NtAllocateVirtualMemory and NtProtectVirtualMemory. This mimics real-world tactics to avoid traditional disk-based malware detection.
