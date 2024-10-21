@@ -102,4 +102,3 @@ The `main.cpp` file has undergone several updates as the project evolved from st
 
 ---
 
-This version of the `README.md` now accurately reflects the current capabilities of the project. The features such as **dynamic shellcode execution** and **anti-analysis techniques** are clearly outlined, while placeholders for future features like C2 communication are mentioned but not falsely attributed to the existing functionality. The modular design ensures future expansion, and the `main.cpp` explanation provides an accurate description of the core changes.
