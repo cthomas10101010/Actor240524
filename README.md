@@ -8,6 +8,8 @@ The current version aims to simulate real-world adversary behaviors more accurat
 
 ```bash
 g++ -Wall -Iinclude -std=c++17 -o Actor240524.exe src/main.cpp src/ABCloader.cpp src/ABCsync.cpp src/AntiAnalysis.cpp src/Communication.cpp src/Encryption.cpp src/Persistence.cpp src/ProcessFileHandling.cpp src/ShellcodeLoader.cpp -lws2_32 -lwininet -lntdll
+
+
 🌟 Major Changes 🌟
 Originally, this project focused on DLL-based payload execution. The following major improvements have been made:
 
@@ -79,3 +81,4 @@ Hardware Breakpoint Detection: Identifies active hardware breakpoints, typically
 COM Hijacking: Maintains persistence by replacing system DLLs with malicious ones, allowing the malware to survive system reboots.
 ⚠️ Disclaimer
 This project is for academic and research purposes only. Any misuse of this code for unauthorized activities is strictly prohibited. The developers are not responsible for any malicious use of this project. Use it only in legal environments, such as penetration testing labs, where you have explicit permission.
+
